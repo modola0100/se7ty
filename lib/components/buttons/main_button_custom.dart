@@ -1,10 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:se7ety/core/utils/text_style.dart';
 
 class MainButtonCustom extends StatelessWidget {
   const MainButtonCustom({
     super.key,
-    this.height = 70,
+    this.height = 70, 
     required this.title,
     required this.onPressed,
     this.backgroundColor,
@@ -21,6 +22,7 @@ class MainButtonCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = context.locale.languageCode == 'ar';
     return SizedBox(
       width: width,
       height: height,
@@ -34,7 +36,7 @@ class MainButtonCustom extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           title,
-          style: TextStyles.semiBoldStyle.copyWith(color: textColor),
+          style: TextStyles.semiBoldStyle.copyWith(color: textColor , fontSize: isArabic ? 20 :16),
         ),
       ),
     );

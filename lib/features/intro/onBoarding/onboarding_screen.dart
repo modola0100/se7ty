@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:se7ety/components/buttons/main_button_custom.dart';
 import 'package:se7ety/core/routes/navigator.dart';
 import 'package:se7ety/core/routes/routes.dart';
+import 'package:se7ety/core/services/local/shered_prefrences.dart';
 import 'package:se7ety/core/utils/colors.dart';
 import 'package:se7ety/core/utils/text_style.dart';
 import 'package:se7ety/features/intro/onBoarding/onboarding_model.dart';
@@ -30,6 +31,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             TextButton(
               style: TextButton.styleFrom(overlayColor: Colors.transparent),
               onPressed: () {
+                SharedPref.isonBoardigSeen();
                 pushWithReplacement(context, Routes.welcome);
               },
               child: Text("skip".tr(), style: TextStyles.mediumStyle.copyWith(color: AppColors.primaryColor)),
@@ -80,9 +82,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                     if (currentIndex == onboardingList.length - 1)
                       MainButtonCustom(
-                         width: 122,
+                        width: 122,
                         title: "Let’s Go".tr(),
                         onPressed: () {
+                          SharedPref.isonBoardigSeen();
                           pushWithReplacement(context, Routes.welcome);
                         },
                         backgroundColor: AppColors.primaryColor,

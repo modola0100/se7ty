@@ -28,13 +28,7 @@ class WelcomeScreen extends StatelessWidget {
                   Text("hello".tr(), style: TextStyles.boldStyle.copyWith(color: AppColors.primaryColor, fontSize: 30)),
                   Gap(15),
                   Text("booking".tr(), style: TextStyles.regularStyle.copyWith(fontSize: 18)),
-                  IconButton(
-                    onPressed: () {
-                      bool isArabic = context.locale.languageCode == 'ar';
-                      context.setLocale(Locale(isArabic ? 'en' : 'ar'));
-                    },
-                    icon: Icon(Icons.language),
-                  ),
+                  
                   Spacer(flex: 5),
                   Container(
                     width: double.infinity,
