@@ -7,7 +7,7 @@ import 'package:se7ety/core/routes/routes.dart';
 import 'package:se7ety/core/services/local/shered_prefrences.dart';
 import 'package:se7ety/core/utils/colors.dart';
 import 'package:se7ety/core/utils/text_style.dart';
-import 'package:se7ety/features/intro/onBoarding/onboarding_model.dart';
+import 'package:se7ety/features/onBoarding/onboarding_model.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -34,7 +34,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 SharedPref.isonBoardigSeen();
                 pushWithReplacement(context, Routes.welcome);
               },
-              child: Text("skip".tr(), style: TextStyles.mediumStyle.copyWith(color: AppColors.primaryColor)),
+              child: Text(
+                "skip".tr(),
+                style: TextStyles.mediumStyle.copyWith(
+                  color: AppColors.primaryColor,
+                ),
+              ),
             ),
         ],
       ),
@@ -53,13 +58,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
-                      SvgPicture.asset(onboardingList[index].image, width: MediaQuery.sizeOf(context).width * 0.8),
+                      SvgPicture.asset(
+                        onboardingList[index].image,
+                        width: MediaQuery.sizeOf(context).width * 0.8,
+                      ),
                       Spacer(),
-                      Text(onboardingList[index].title, style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor)),
+                      Text(
+                        onboardingList[index].title,
+                        style: TextStyles.semiBoldStyle.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
 
                       Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Text(onboardingList[index].description, style: TextStyles.regularStyle.copyWith(fontSize: 15), textAlign: TextAlign.center),
+                        child: Text(
+                          onboardingList[index].description,
+                          style: TextStyles.regularStyle.copyWith(fontSize: 15),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                       Spacer(flex: 3),
                     ],
@@ -78,7 +95,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     SmoothPageIndicator(
                       controller: pageController,
                       count: onboardingList.length,
-                      effect: ExpandingDotsEffect(dotWidth: 11, dotHeight: 11, dotColor: AppColors.greyColor, activeDotColor: AppColors.primaryColor),
+                      effect: ExpandingDotsEffect(
+                        dotWidth: 11,
+                        dotHeight: 11,
+                        dotColor: AppColors.greyColor,
+                        activeDotColor: AppColors.primaryColor,
+                      ),
                     ),
                     if (currentIndex == onboardingList.length - 1)
                       MainButtonCustom(

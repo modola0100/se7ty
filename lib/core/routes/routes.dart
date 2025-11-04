@@ -8,9 +8,9 @@ import 'package:se7ety/features/auth/presentation/register/register_complete_scr
 import 'package:se7ety/features/auth/presentation/register/register_screen.dart';
 import 'package:se7ety/features/patient/home/presentation/patient_home_screen.dart';
 import 'package:se7ety/features/patient/main/patient_main_screen.dart';
-import 'package:se7ety/features/intro/onBoarding/onboarding_screen.dart';
-import 'package:se7ety/features/intro/splash/splash_screen.dart';
-import 'package:se7ety/features/intro/welcome/welcome_screen.dart';
+import 'package:se7ety/features/splash/splash_screen.dart';
+import 'package:se7ety/features/welcome/welcome/welcome_screen.dart';
+import 'package:se7ety/features/onBoarding/onboarding_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -28,7 +28,10 @@ class Routes {
     navigatorKey: navigatorKey,
     routes: [
       GoRoute(path: splash, builder: (context, state) => SplashScreen()),
-      GoRoute(path: onboarding, builder: (context, state) => OnboardingScreen()),
+      GoRoute(
+        path: onboarding,
+        builder: (context, state) => OnboardingScreen(),
+      ),
       GoRoute(path: welcome, builder: (context, state) => WelcomeScreen()),
       GoRoute(
         path: login,
@@ -50,10 +53,19 @@ class Routes {
       ),
       GoRoute(
         path: registerComplete,
-        builder: (context, state) => BlocProvider(create: (BuildContext context) => AuthCubit(), child: RegisterCompleteScreen()),
+        builder: (context, state) => BlocProvider(
+          create: (BuildContext context) => AuthCubit(),
+          child: RegisterCompleteScreen(),
+        ),
       ),
-      GoRoute(path: patientMain, builder: (context, state) => PatientMainScreen()),
-      GoRoute(path: patientHome, builder: (context, state) => PatientHomeScreen()),
+      GoRoute(
+        path: patientMain,
+        builder: (context, state) => PatientMainScreen(),
+      ),
+      GoRoute(
+        path: patientHome,
+        builder: (context, state) => PatientHomeScreen(),
+      ),
     ],
   );
 }
