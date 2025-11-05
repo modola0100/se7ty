@@ -86,5 +86,11 @@
     "booking_now":"Book now and be part of your health journey.",
     "search_doctor":"Search for a doctor",
     "specialities":"Specialities",
-    "top_rate":"Top Rated"
+    "top_rate":"Top Rated",
+    "profile_doctor":"Doctor Profile",
+    "Dr.": "Dr. ",
+    "contact":"Contact",
+    "book_now":"Book Now",
+    "no_doctor":"There are no doctors available at the moment"
+    
 }

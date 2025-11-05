@@ -1,31 +1,30 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:se7ety/features/patient/home/presentation/patient_home_screen.dart';
+import 'package:se7ety/features/patient/home/presentation/pages/patient_home_screen.dart';
+import 'package:se7ety/features/patient/search/presentation/pages/search_screen.dart';
 
 class PatientMainScreen extends StatefulWidget {
-  const PatientMainScreen({super.key});
+  const PatientMainScreen({super.key,});
+  
 
   @override
   State<PatientMainScreen> createState() => _PatientMainScreenState();
 }
 
 class _PatientMainScreenState extends State<PatientMainScreen> {
+  int currentindex = 0;
   @override
   Widget build(BuildContext context) {
-    int currentindex = 0;
-    
-    
     final List<Widget> screen = [
-        
-      const PatientHomeScreen(),
-      //patientSearchScreen(),
+      PatientHomeScreen(),
+      SearchScreen(),
       //patientAppointmentsScreen(),
       // patientProfileScreen(),
     ];
 
     return Scaffold(
-      body: screen[currentindex],
+      body: IndexedStack(index: currentindex, children: screen),
       bottomNavigationBar: ConvexAppBar(
         items: [
           TabItem(icon: Icons.home, title: "home".tr()),

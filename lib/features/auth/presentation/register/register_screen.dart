@@ -32,9 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
     String handleUserType() {
-      return widget.userType == EnumUserType.doctor
-          ? "doctor".tr()
-          : "patient".tr();
+      return widget.userType == EnumUserType.doctor ? "doctor".tr() : "patient".tr();
     }
 
     var cubit = context.read<AuthCubit>();
@@ -47,11 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           if (widget.userType == EnumUserType.doctor) {
             pushWithReplacement(context, Routes.registerComplete);
           } else {
-            pushWithReplacement(
-              context,
-              Routes.login,
-              extra: EnumUserType.patient,
-            );
+            pushWithReplacement(context, Routes.login, extra: EnumUserType.patient);
           }
 
           log('register success');
@@ -72,20 +66,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(AppImages.logoPng, height: 250, width: 250),
-                    Text(
-                      "splash".tr(),
-                      style: TextStyles.semiBoldStyle.copyWith(
-                        color: AppColors.greenColor,
-                        fontSize: 20,
-                      ),
-                    ),
+                    Text("splash".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.greenColor, fontSize: 20)),
                     Gap(20),
                     Text(
                       "signup_as".tr() + " " + handleUserType(),
-                      style: TextStyles.semiBoldStyle.copyWith(
-                        color: AppColors.primaryColor,
-                        fontSize: isArabic ? 20 : 16,
-                      ),
+                      style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: isArabic ? 20 : 16),
                     ),
                     Gap(10),
                     CustomeTextFormField(
@@ -101,37 +86,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       color: AppColors.greyColor.withValues(alpha: 2.0),
                       hintText: "name".tr(),
-                      prefixIcon: Icon(
-                        Icons.person,
-                        color: AppColors.primaryColor,
-                      ),
+                      prefixIcon: Icon(Icons.person, color: AppColors.primaryColor),
                       controller: cubit.nameController,
                     ),
                     Gap(10),
                     CustomeTextFormField(
-                      textAlign: context.locale.languageCode == 'ar'
-                          ? TextAlign.end
-                          : TextAlign.start,
+                      textAlign: context.locale.languageCode == 'ar' ? TextAlign.end : TextAlign.start,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "email".tr();
-                        }
-                        // Clean the input (trim, remove invisible chars, normalize digits)
-                        String cleaned = cleanEmail(value);
-                        if (!validationEmail(cleaned)) {
+                        } else if (!validationEmail(value)) {
                           return "enter_email".tr();
                         }
-                        // Update controller with cleaned email so backend uses correct value
-                        cubit.emailController.text = cleaned;
                         return null;
                       },
                       color: AppColors.greyColor.withValues(alpha: 2.0),
                       hintText: 'example.com@',
-                      prefixIcon: Icon(
-                        Icons.mail,
-                        color: AppColors.primaryColor,
-                      ),
+                      prefixIcon: Icon(Icons.mail, color: AppColors.primaryColor),
                       controller: cubit.emailController,
                     ),
                     Gap(10),
@@ -164,31 +136,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "have_account".tr(),
-                          style: TextStyles.semiBoldStyle.copyWith(
-                            color: AppColors.darkColor,
-                            fontSize: 15,
-                          ),
-                        ),
+                        Text("have_account".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.darkColor, fontSize: 15)),
                         TextButton(
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.all(0),
-                          ),
+                          style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
                           onPressed: () {
-                            pushWithReplacement(
-                              context,
-                              Routes.login,
-                              extra: widget.userType,
-                            );
+                            pushWithReplacement(context, Routes.login, extra: widget.userType);
                           },
-                          child: Text(
-                            "login2".tr(),
-                            style: TextStyles.semiBoldStyle.copyWith(
-                              color: AppColors.primaryColor,
-                              fontSize: 15,
-                            ),
-                          ),
+                          child: Text("login2".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: 15)),
                         ),
                       ],
                     ),

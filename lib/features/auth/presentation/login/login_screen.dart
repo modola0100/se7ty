@@ -32,9 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
     String handleUserType() {
-      return widget.userType == EnumUserType.doctor
-          ? "doctor".tr()
-          : "patient".tr();
+      return widget.userType == EnumUserType.doctor ? "doctor".tr() : "patient".tr();
     }
 
     var cubit = context.read<AuthCubit>();
@@ -67,46 +65,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(AppImages.logoPng, height: 250, width: 250),
-                    Text(
-                      "splash".tr(),
-                      style: TextStyles.semiBoldStyle.copyWith(
-                        color: AppColors.greenColor,
-                        fontSize: 20,
-                      ),
-                    ),
+                    Text("splash".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.greenColor, fontSize: 20)),
                     Gap(40),
                     Text(
                       "login_as".tr() + " " + handleUserType(),
-                      style: TextStyles.semiBoldStyle.copyWith(
-                        color: AppColors.primaryColor,
-                        fontSize: isArabic ? 20 : 16,
-                      ),
+                      style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: isArabic ? 20 : 16),
                     ),
                     Gap(30),
                     CustomeTextFormField(
-                      textAlign: context.locale.languageCode == 'ar'
-                          ? TextAlign.end
-                          : TextAlign.start,
+                      textAlign: context.locale.languageCode == 'ar' ? TextAlign.end : TextAlign.start,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "email".tr();
+                        } else if (!validationEmail(value)) {
+                          return "enter_email";
                         }
-                        // Remove any whitespace and validate
-                        String cleanEmail = value.trim();
-                        if (!validationEmail(cleanEmail)) {
-                          return "enter_email".tr();
-                        }
-                        // Update the controller with cleaned email
-                        cubit.emailController.text = cleanEmail;
                         return null;
                       },
                       color: AppColors.greyColor.withValues(alpha: 2.0),
                       hintText: 'example.com@',
-                      prefixIcon: Icon(
-                        Icons.mail,
-                        color: AppColors.primaryColor,
-                      ),
+                      prefixIcon: Icon(Icons.mail, color: AppColors.primaryColor),
                       controller: cubit.emailController,
                     ),
                     Gap(20),
@@ -128,13 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextButton(
                         style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
                         onPressed: () {},
-                        child: Text(
-                          "forget_password".tr(),
-                          style: TextStyles.regularStyle.copyWith(
-                            color: AppColors.darkColor,
-                            fontSize: 15,
-                          ),
-                        ),
+                        child: Text("forget_password".tr(), style: TextStyles.regularStyle.copyWith(color: AppColors.darkColor, fontSize: 15)),
                       ),
                     ),
                     MainButtonCustom(
@@ -152,31 +125,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "no_account".tr(),
-                          style: TextStyles.semiBoldStyle.copyWith(
-                            color: AppColors.darkColor,
-                            fontSize: 15,
-                          ),
-                        ),
+                        Text("no_account".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.darkColor, fontSize: 15)),
                         TextButton(
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.all(0),
-                          ),
+                          style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
                           onPressed: () {
-                            pushWithReplacement(
-                              context,
-                              Routes.register,
-                              extra: widget.userType,
-                            );
+                            pushWithReplacement(context, Routes.register, extra: widget.userType);
                           },
-                          child: Text(
-                            "login_now".tr(),
-                            style: TextStyles.semiBoldStyle.copyWith(
-                              color: AppColors.primaryColor,
-                              fontSize: 15,
-                            ),
-                          ),
+                          child: Text("login_now".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: 15)),
                         ),
                       ],
                     ),

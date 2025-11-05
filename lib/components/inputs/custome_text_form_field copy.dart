@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:se7ety/core/utils/colors.dart';
 
 class CustomeTextFormField extends StatefulWidget {
-  const CustomeTextFormField({super.key, this.validator, this.controller, this.prefixIcon, this.hintText, this.suffixIcon, this.color, this.maxLines, this.fontSize, this.readOnly = false, this.keyboardType, this.textAlign = TextAlign.start, this.onTap});
+  const CustomeTextFormField({super.key, this.validator, this.controller, this.prefixIcon, this.hintText, this.suffixIcon, this.color, this.maxLines, this.fontSize, this.readOnly = false, this.keyboardType, this.textAlign = TextAlign.start, this.onTap, this.textInputAction, this.onFieldSubmitted, this.onChanged});
 
   final String? Function(String?)? validator;
   final TextEditingController? controller;
@@ -17,6 +17,9 @@ class CustomeTextFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final TextAlign textAlign;
   final Function()? onTap;
+  final TextInputAction? textInputAction;
+  final Function(String)? onFieldSubmitted;
+  final Function(String)? onChanged ;
   @override
   State<CustomeTextFormField> createState() => _CustomeTextFormFieldState();
 }
@@ -35,6 +38,9 @@ class _CustomeTextFormFieldState extends State<CustomeTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: widget.onChanged,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      textInputAction: widget.textInputAction,
       onTap: widget.onTap,
       textAlign: widget.textAlign,
       keyboardType: widget.keyboardType,

@@ -11,13 +11,7 @@ showErrorDialog(BuildContext context, String message) {
       backgroundColor: AppColors.primaryColor,
       margin: EdgeInsets.all(20),
       elevation: 0,
-      content: Text(
-        message,
-        style: TextStyles.regularStyle.copyWith(
-          color: AppColors.wightColor,
-          fontSize: 16,
-        ),
-      ),
+      content: Text(message, style: TextStyles.regularStyle.copyWith(color: AppColors.wightColor, fontSize: 16)),
     ),
   );
 }
