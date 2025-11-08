@@ -17,25 +17,20 @@ import 'package:se7ety/core/utils/text_style.dart';
 import 'package:se7ety/features/auth/models/enum_user_type.dart';
 import 'package:se7ety/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:se7ety/features/auth/presentation/cubit/auth_state.dart';
+import 'package:se7ety/features/auth/presentation/widgets/auth_form.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key, required this.userType});
 
   final EnumUserType userType;
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  @override
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
     String handleUserType() {
-      return widget.userType == EnumUserType.doctor ? "doctor".tr() : "patient".tr();
+      return userType == EnumUserType.doctor ? "doctor".tr() : "patient".tr();
     }
 
-    var cubit = context.read<AuthCubit>();
     return BlocListener<AuthCubit, AuthState>(
       listener: (BuildContext context, state) {
         if (state is LoadingAuthstate) {
@@ -58,85 +53,115 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Form(
-              key: cubit.formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(AppImages.logoPng, height: 250, width: 250),
-                    Text("splash".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.greenColor, fontSize: 20)),
-                    Gap(40),
-                    Text(
-                      "login_as".tr() + " " + handleUserType(),
-                      style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: isArabic ? 20 : 16),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(AppImages.logoPng, height: 250, width: 250),
+                  Text(
+                    "splash".tr(),
+                    style: TextStyles.semiBoldStyle.copyWith(
+                      color: AppColors.greenColor,
+                      fontSize: 20,
                     ),
-                    Gap(30),
-                    CustomeTextFormField(
-                      textAlign: context.locale.languageCode == 'ar' ? TextAlign.end : TextAlign.start,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "email".tr();
-                        } else if (!validationEmail(value)) {
-                          return "enter_email";
-                        }
-                        return null;
-                      },
-                      color: AppColors.greyColor.withValues(alpha: 2.0),
-                      hintText: 'example.com@',
-                      prefixIcon: Icon(Icons.mail, color: AppColors.primaryColor),
-                      controller: cubit.emailController,
+                  ),
+                  Gap(40),
+                  Text(
+                    "login_as".tr() + " " + handleUserType(),
+                    style: TextStyles.semiBoldStyle.copyWith(
+                      color: AppColors.primaryColor,
+                      fontSize: isArabic ? 20 : 16,
                     ),
-                    Gap(20),
-                    CustomePassword(
-                      controller: cubit.passwordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "password".tr();
-                        } else if (!validationPassword(value)) {
-                          return "enter_password".tr();
-                        }
-
-                        return null;
-                      },
-                    ),
-                    Gap(5),
-                    Align(
-                      alignment: AlignmentGeometry.centerRight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
-                        onPressed: () {},
-                        child: Text("forget_password".tr(), style: TextStyles.regularStyle.copyWith(color: AppColors.darkColor, fontSize: 15)),
-                      ),
-                    ),
-                    MainButtonCustom(
-                      title: "login".tr(),
-                      onPressed: () {
-                        if (cubit.formKey.currentState!.validate()) {
-                          cubit.login(type: widget.userType);
-                        }
-                      },
-                      backgroundColor: AppColors.primaryColor,
-                      textColor: AppColors.wightColor,
-                      height: 55,
-                    ),
-                    Gap(50),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Gap(30),
+                  Form(
+                    key: AuthForm.formKey,
+                    child: Column(
                       children: [
-                        Text("no_account".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.darkColor, fontSize: 15)),
-                        TextButton(
-                          style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
-                          onPressed: () {
-                            pushWithReplacement(context, Routes.register, extra: widget.userType);
+                        CustomeTextFormField(
+                          textAlign: context.locale.languageCode == 'ar'
+                              ? TextAlign.end
+                              : TextAlign.start,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "email".tr();
+                            } else if (!validationEmail(value)) {
+                              return "enter_email";
+                            }
+                            return null;
                           },
-                          child: Text("login_now".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: 15)),
+                          color: AppColors.greyColor.withValues(alpha: 2.0),
+                          hintText: 'example.com@',
+                          prefixIcon: Icon(
+                            Icons.mail,
+                            color: AppColors.primaryColor,
+                          ),
+                          controller: AuthForm.emailController,
+                        ),
+                        Gap(20),
+                        CustomePassword(
+                          controller: AuthForm.passwordController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "password".tr();
+                            } else if (!validationPassword(value)) {
+                              return "enter_password".tr();
+                            }
+                            return null;
+                          },
+                        ),
+                        Gap(30),
+                        MainButtonCustom(
+                          title: "login".tr(),
+                          onPressed: () {
+                            if (AuthForm.formKey.currentState!.validate()) {
+                              context.read<AuthCubit>().login(
+                                email: AuthForm.emailController.text,
+                                password: AuthForm.passwordController.text,
+                              );
+                            }
+                          },
+                          backgroundColor: AppColors.primaryColor,
+                          textColor: AppColors.wightColor,
+                          height: 55,
+                        ),
+                        Gap(30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "no_account".tr(),
+                              style: TextStyles.semiBoldStyle.copyWith(
+                                color: AppColors.darkColor,
+                                fontSize: 15,
+                              ),
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.all(0),
+                              ),
+                              onPressed: () {
+                                pushWithReplacement(
+                                  context,
+                                  Routes.register,
+                                  extra: userType,
+                                );
+                              },
+                              child: Text(
+                                "login_now".tr(),
+                                style: TextStyles.semiBoldStyle.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

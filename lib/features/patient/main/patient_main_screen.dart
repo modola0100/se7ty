@@ -5,8 +5,7 @@ import 'package:se7ety/features/patient/home/presentation/pages/patient_home_scr
 import 'package:se7ety/features/patient/search/presentation/pages/search_screen.dart';
 
 class PatientMainScreen extends StatefulWidget {
-  const PatientMainScreen({super.key,});
-  
+  const PatientMainScreen({super.key});
 
   @override
   State<PatientMainScreen> createState() => _PatientMainScreenState();
@@ -19,8 +18,8 @@ class _PatientMainScreenState extends State<PatientMainScreen> {
     final List<Widget> screen = [
       PatientHomeScreen(),
       SearchScreen(),
-      //patientAppointmentsScreen(),
-      // patientProfileScreen(),
+      const Center(child: Text('Appointments Screen Coming Soon')),
+      const Center(child: Text('Profile Screen Coming Soon')),
     ];
 
     return Scaffold(

@@ -17,6 +17,7 @@ import 'package:se7ety/core/utils/text_style.dart';
 import 'package:se7ety/features/auth/models/enum_user_type.dart';
 import 'package:se7ety/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:se7ety/features/auth/presentation/cubit/auth_state.dart';
+import 'package:se7ety/features/auth/presentation/widgets/auth_form.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key, required this.userType});
@@ -32,7 +33,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
     String handleUserType() {
-      return widget.userType == EnumUserType.doctor ? "doctor".tr() : "patient".tr();
+      return widget.userType == EnumUserType.doctor
+          ? "doctor".tr()
+          : "patient".tr();
     }
 
     var cubit = context.read<AuthCubit>();
@@ -45,7 +48,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           if (widget.userType == EnumUserType.doctor) {
             pushWithReplacement(context, Routes.registerComplete);
           } else {
-            pushWithReplacement(context, Routes.login, extra: EnumUserType.patient);
+            pushWithReplacement(
+              context,
+              Routes.login,
+              extra: EnumUserType.patient,
+            );
           }
 
           log('register success');
@@ -60,17 +67,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Form(
-              key: cubit.formKey,
+              key: AuthForm.formKey,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(AppImages.logoPng, height: 250, width: 250),
-                    Text("splash".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.greenColor, fontSize: 20)),
+                    Text(
+                      "splash".tr(),
+                      style: TextStyles.semiBoldStyle.copyWith(
+                        color: AppColors.greenColor,
+                        fontSize: 20,
+                      ),
+                    ),
                     Gap(20),
                     Text(
                       "signup_as".tr() + " " + handleUserType(),
-                      style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: isArabic ? 20 : 16),
+                      style: TextStyles.semiBoldStyle.copyWith(
+                        color: AppColors.primaryColor,
+                        fontSize: isArabic ? 20 : 16,
+                      ),
                     ),
                     Gap(10),
                     CustomeTextFormField(
@@ -86,12 +102,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       color: AppColors.greyColor.withValues(alpha: 2.0),
                       hintText: "name".tr(),
-                      prefixIcon: Icon(Icons.person, color: AppColors.primaryColor),
-                      controller: cubit.nameController,
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: AppColors.primaryColor,
+                      ),
+                      controller: AuthForm.nameController,
                     ),
                     Gap(10),
                     CustomeTextFormField(
-                      textAlign: context.locale.languageCode == 'ar' ? TextAlign.end : TextAlign.start,
+                      textAlign: context.locale.languageCode == 'ar'
+                          ? TextAlign.end
+                          : TextAlign.start,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -103,12 +124,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       color: AppColors.greyColor.withValues(alpha: 2.0),
                       hintText: 'example.com@',
-                      prefixIcon: Icon(Icons.mail, color: AppColors.primaryColor),
-                      controller: cubit.emailController,
+                      prefixIcon: Icon(
+                        Icons.mail,
+                        color: AppColors.primaryColor,
+                      ),
+                      controller: AuthForm.emailController,
                     ),
                     Gap(10),
                     CustomePassword(
-                      controller: cubit.passwordController,
+                      controller: AuthForm.passwordController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "password".tr();
@@ -124,8 +148,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     MainButtonCustom(
                       title: "signup".tr(),
                       onPressed: () {
-                        if (cubit.formKey.currentState!.validate()) {
-                          cubit.regiset(type: widget.userType);
+                        if (AuthForm.formKey.currentState!.validate()) {
+                          cubit.registerUser(
+                            email: AuthForm.emailController.text,
+                            password: AuthForm.passwordController.text,
+                            name: AuthForm.nameController.text,
+                            type: widget.userType,
+                          );
                         }
                       },
                       backgroundColor: AppColors.primaryColor,
@@ -136,13 +165,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("have_account".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.darkColor, fontSize: 15)),
+                        Text(
+                          "have_account".tr(),
+                          style: TextStyles.semiBoldStyle.copyWith(
+                            color: AppColors.darkColor,
+                            fontSize: 15,
+                          ),
+                        ),
                         TextButton(
-                          style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.all(0),
+                          ),
                           onPressed: () {
-                            pushWithReplacement(context, Routes.login, extra: widget.userType);
+                            pushWithReplacement(
+                              context,
+                              Routes.login,
+                              extra: widget.userType,
+                            );
                           },
-                          child: Text("login2".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: 15)),
+                          child: Text(
+                            "login2".tr(),
+                            style: TextStyles.semiBoldStyle.copyWith(
+                              color: AppColors.primaryColor,
+                              fontSize: 15,
+                            ),
+                          ),
                         ),
                       ],
                     ),

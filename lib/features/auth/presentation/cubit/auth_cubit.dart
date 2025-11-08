@@ -1,47 +1,54 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:se7ety/core/functions/update_image.dart';
+import 'package:se7ety/features/auth/domain/repositories/auth_repository.dart';
 import 'package:se7ety/features/auth/models/doctor_model.dart';
 import 'package:se7ety/features/auth/models/enum_user_type.dart';
 import 'package:se7ety/features/auth/models/patient_model.dart';
 import 'package:se7ety/features/auth/presentation/cubit/auth_state.dart';
+import 'package:se7ety/core/functions/update_image.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(InitialAuthState());
+  final AuthRepository _authRepository;
 
-  final emailController = TextEditingController();
-  final nameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-  String? specialization;
+  AuthCubit(this._authRepository) : super(InitialAuthState());
 
-  final addressController = TextEditingController();
-  final phone1Controller = TextEditingController();
-  final phone2Controller = TextEditingController();
-  final openHourController = TextEditingController();
-  final closeHourController = TextEditingController();
-  final bioController = TextEditingController();
-
-  regiset({required EnumUserType type}) async {
+  Future<void> registerUser({
+    required String email,
+    required String password,
+    required String name,
+    required EnumUserType type,
+  }) async {
     emit(LoadingAuthstate());
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+      // Step 1: Create authentication account
+      final credential = await _authRepository.createUserWithEmail(
+        email,
+        password,
+      );
+      final user = credential.user;
 
-      User? user = credential.user;
-      await user?.updateDisplayName(nameController.text);
+      if (user == null) {
+        emit(ErrorAuthState('Failed to create user'));
+        return;
+      }
 
-      user?.updatePhotoURL(type == EnumUserType.doctor ? "doctro" : "patient");
+      // Step 2: Update user profile
+      await _authRepository.updateUserProfile(
+        user,
+        name,
+        type == EnumUserType.doctor ? "doctor" : "patient",
+      );
 
+      // Step 3: Create user profile in Firestore
       if (type == EnumUserType.doctor) {
-        var doctor = DoctorModel(email: emailController.text, name: nameController.text, uid: user?.uid);
-        FirebaseFirestore.instance.collection("doctor").doc(user?.uid).set(doctor.toJson());
+        await _authRepository.createDoctorProfile(
+          DoctorModel(email: email, name: name, uid: user.uid),
+        );
       } else {
-        var patient = PatientModel(email: emailController.text, uid: user?.uid, name: nameController.text);
-        FirebaseFirestore.instance.collection("patient").doc(user?.uid).set(patient.toJson());
+        await _authRepository.createPatientProfile(
+          PatientModel(email: email, name: name, uid: user.uid),
+        );
       }
 
       emit(SuccesAuthState());
@@ -58,11 +65,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  login({required EnumUserType type}) async {
+  Future<void> login({required String email, required String password}) async {
     emit(LoadingAuthstate());
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-
+      final credential = await _authRepository.signInWithEmail(email, password);
       emit(SuccesAuthState(role: credential.user?.photoURL));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -77,23 +83,46 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  updatedata(File? imagefile) async {
+  String? getCurrentUserId() {
+    return _authRepository.getCurrentUserId();
+  }
+
+  Future<void> updateDoctorProfile({
+    required String uid,
+    required String specialization,
+    required String bio,
+    required String address,
+    required String phone1,
+    required String phone2,
+    required String openHour,
+    required String closeHour,
+    required File? imageFile,
+  }) async {
     try {
       emit(LoadingAuthstate());
-      if (imagefile == null) {
+
+      if (imageFile == null) {
         emit(ErrorAuthState('.يرجى اختيار صوره'));
         return;
       }
-      String? imageUrl = await updateImageToCloudinary(imagefile);
-      if (imageUrl == null) {
-        emit(ErrorAuthState('فشل رفع الصوره'));
-        return;
-      }
 
-      var doctor = DoctorModel(uid: FirebaseAuth.instance.currentUser?.uid, specialization: specialization, bio: bioController.text, address: addressController.text, phone1: phone1Controller.text, phone2: phone2Controller.text, openHour: openHourController.text, closeHour: closeHourController.text, image: imageUrl);
-      FirebaseFirestore.instance.collection("doctor").doc(doctor.uid).update(doctor.updateData());
+      final imageUrl = await updateImageToCloudinary(imageFile);
+
+      final doctor = DoctorModel(
+        uid: uid,
+        specialization: specialization,
+        bio: bio,
+        address: address,
+        phone1: phone1,
+        phone2: phone2,
+        openHour: openHour,
+        closeHour: closeHour,
+        image: imageUrl,
+      );
+
+      await _authRepository.updateDoctorProfile(doctor);
       emit(SuccesAuthState());
-    } on Exception catch (_) {
+    } catch (e) {
       emit(ErrorAuthState('.حدث خطأ ما يرجى المحاوله لاحقا'));
     }
   }

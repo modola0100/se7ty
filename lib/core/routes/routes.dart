@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:se7ety/features/auth/models/doctor_model.dart';
 import 'package:se7ety/features/auth/models/enum_user_type.dart';
 import 'package:se7ety/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:se7ety/features/auth/domain/repositories/auth_repository.dart';
 import 'package:se7ety/features/auth/presentation/login/login_screen.dart';
 import 'package:se7ety/features/auth/presentation/register/register_complete_screen.dart';
 import 'package:se7ety/features/auth/presentation/register/register_screen.dart';
@@ -49,7 +50,7 @@ class Routes {
         path: login,
         builder: (context, state) {
           return BlocProvider(
-            create: (BuildContext context) => AuthCubit(),
+            create: (BuildContext context) => AuthCubit(AuthRepository()),
             child: LoginScreen(userType: state.extra as EnumUserType),
           );
         },
@@ -58,7 +59,7 @@ class Routes {
         path: register,
         builder: (context, state) {
           return BlocProvider(
-            create: (BuildContext context) => AuthCubit(),
+            create: (BuildContext context) => AuthCubit(AuthRepository()),
             child: RegisterScreen(userType: state.extra as EnumUserType),
           );
         },
@@ -66,7 +67,7 @@ class Routes {
       GoRoute(
         path: registerComplete,
         builder: (context, state) => BlocProvider(
-          create: (BuildContext context) => AuthCubit(),
+          create: (BuildContext context) => AuthCubit(AuthRepository()),
           child: RegisterCompleteScreen(),
         ),
       ),
