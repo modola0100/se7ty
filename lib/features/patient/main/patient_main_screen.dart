@@ -2,7 +2,9 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:se7ety/features/patient/home/presentation/pages/patient_home_screen.dart';
-import 'package:se7ety/features/patient/search/presentation/pages/search_screen.dart';
+import '../../patient/search/presentation/pages/search_screen.dart';
+import '../../appointments/screens/appointment_list_screen.dart';
+import '../../profile/screens/profile_screen.dart';
 
 class PatientMainScreen extends StatefulWidget {
   const PatientMainScreen({super.key});
@@ -18,10 +20,14 @@ class _PatientMainScreenState extends State<PatientMainScreen> {
     final List<Widget> screen = [
       PatientHomeScreen(),
       SearchScreen(),
-      const Center(child: Text('Appointments Screen Coming Soon')),
-      const Center(child: Text('Profile Screen Coming Soon')),
+      const AppointmentListScreen(),
+      const ProfileScreen(),
     ];
-
+    print('currentindex: $currentindex, screen.length: ${screen.length}');
+    assert(
+      currentindex >= 0 && currentindex < screen.length,
+      'Index out of bounds for IndexedStack children.',
+    );
     return Scaffold(
       body: IndexedStack(index: currentindex, children: screen),
       bottomNavigationBar: ConvexAppBar(

@@ -20,6 +20,12 @@ import 'package:se7ety/features/patient/home/presentation/pages/specialization_d
 import 'package:se7ety/features/patient/main/patient_main_screen.dart';
 import 'package:se7ety/features/patient/search/presentation/pages/search_screen.dart';
 import 'package:se7ety/features/splash/splash_screen.dart';
+import '../../features/appointments/screens/booking_screen.dart';
+import '../../features/appointments/screens/appointment_list_screen.dart';
+
+import '../../features/profile/screens/settings_screen.dart';
+import '../../features/profile/screens/edit_profile_screen.dart';
+import '../../features/profile/models/user_model.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -36,6 +42,10 @@ class Routes {
   static const String specializationDoctor = '/specializationDoctor';
   static const String doctorProfile = '/doctorProfile';
   static const String doctorSearch = '/doctorSearch';
+  static const String booking = '/booking';
+  static const String appointmentList = '/appointmentList';
+  static const String settings = '/settings';
+  static const String editProfile = '/editProfile';
 
   static GoRouter route = GoRouter(
     navigatorKey: navigatorKey,
@@ -96,6 +106,24 @@ class Routes {
         path: doctorProfile,
         builder: (context, state) =>
             DoctorProfileScreen(doctorModel: state.extra as DoctorModel),
+      ),
+      GoRoute(
+        path: booking,
+        builder: (context, state) =>
+            BookingScreen(doctorName: state.extra as String),
+      ),
+      GoRoute(
+        path: appointmentList,
+        builder: (context, state) => const AppointmentListScreen(),
+      ),
+      GoRoute(
+        path: settings,
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: editProfile,
+        builder: (context, state) =>
+            EditProfileScreen(user: state.extra as UserModel),
       ),
       GoRoute(
         path: doctorSearch,

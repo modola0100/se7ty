@@ -1,14 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:se7ety/components/buttons/main_button_custom.dart';
-import 'package:se7ety/core/routes/navigator.dart';
-import 'package:se7ety/core/utils/colors.dart';
-import 'package:se7ety/core/utils/text_style.dart';
-import 'package:se7ety/features/auth/models/doctor_model.dart';
-import 'package:se7ety/features/patient/home/presentation/widgets/phone.dart';
+import '../../../../../components/buttons/main_button_custom.dart';
+import '../../../../../core/routes/navigator.dart';
+import '../../../../../core/utils/colors.dart';
+import '../../../../../core/utils/text_style.dart';
+import '../../../../auth/models/doctor_model.dart';
+import '../widgets/phone.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../../core/routes/routes.dart';
+import 'package:go_router/go_router.dart';
 
 class DoctorProfileScreen extends StatefulWidget {
   const DoctorProfileScreen({super.key, required this.doctorModel});
@@ -31,14 +33,20 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   }
 
   void translateSpecialization() async {
-    final translation = await GoogleTranslator().translate(widget.doctorModel.specialization ?? '', to: 'en');
+    final translation = await GoogleTranslator().translate(
+      widget.doctorModel.specialization ?? '',
+      to: 'en',
+    );
     setState(() {
       translatedSpecialization = translation.text;
     });
   }
 
   void translateAddress() async {
-    final translationAddress = await GoogleTranslator().translate(widget.doctorModel.address ?? '', to: 'en');
+    final translationAddress = await GoogleTranslator().translate(
+      widget.doctorModel.address ?? '',
+      to: 'en',
+    );
     setState(() {
       translatedAddress = translationAddress.text;
     });
@@ -54,7 +62,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
           },
           icon: Icon(Icons.arrow_back_ios_new, color: AppColors.wightColor),
         ),
-        title: Text("profile_doctor".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.wightColor, fontSize: 25)),
+        title: Text(
+          "profile_doctor".tr(),
+          style: TextStyles.semiBoldStyle.copyWith(
+            color: AppColors.wightColor,
+            fontSize: 25,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -66,7 +80,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
             children: [
               Row(
                 children: [
-                  CircleAvatar(radius: 80, backgroundColor: AppColors.wightColor, backgroundImage: NetworkImage(widget.doctorModel.image ?? '')),
+                  CircleAvatar(
+                    radius: 80,
+                    backgroundColor: AppColors.wightColor,
+                    backgroundImage: NetworkImage(
+                      widget.doctorModel.image ?? '',
+                    ),
+                  ),
                   Gap(20),
                   Expanded(
                     child: Padding(
@@ -76,18 +96,44 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         children: [
                           Row(
                             children: [
-                              Text("Dr.".tr(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: 25)),
+                              Text(
+                                "Dr.".tr(),
+                                style: TextStyles.semiBoldStyle.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 25,
+                                ),
+                              ),
                               Expanded(
-                                child: Text(maxLines: 1, widget.doctorModel.name ?? '', style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: 25)),
+                                child: Text(
+                                  maxLines: 1,
+                                  widget.doctorModel.name ?? '',
+                                  style: TextStyles.semiBoldStyle.copyWith(
+                                    color: AppColors.primaryColor,
+                                    fontSize: 25,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                           Gap(5),
-                          Text(context.locale.languageCode == "ar" ? widget.doctorModel.specialization ?? '' : translatedSpecialization, style: TextStyles.semiBoldStyle.copyWith(fontSize: 18)),
+                          Text(
+                            context.locale.languageCode == "ar"
+                                ? widget.doctorModel.specialization ?? ''
+                                : translatedSpecialization,
+                            style: TextStyles.semiBoldStyle.copyWith(
+                              fontSize: 18,
+                            ),
+                          ),
                           Gap(10),
                           Row(
                             children: [
-                              Text(widget.doctorModel.rating.toString(), style: TextStyles.semiBoldStyle.copyWith(color: AppColors.primaryColor, fontSize: 18)),
+                              Text(
+                                widget.doctorModel.rating.toString(),
+                                style: TextStyles.semiBoldStyle.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 18,
+                                ),
+                              ),
                               Gap(5),
                               Icon(Icons.star, color: Colors.amber),
                             ],
@@ -98,7 +144,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                               Phone(
                                 title: '1',
                                 onTap: () {
-                                  var phone = Uri.parse('tel:${widget.doctorModel.phone1}');
+                                  var phone = Uri.parse(
+                                    'tel:${widget.doctorModel.phone1}',
+                                  );
                                   launchUrl(phone);
                                 },
                               ),
@@ -107,7 +155,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                 Phone(
                                   title: '2',
                                   onTap: () {
-                                    var phone = Uri.parse('tel${widget.doctorModel.phone2}');
+                                    var phone = Uri.parse(
+                                      'tel${widget.doctorModel.phone2}',
+                                    );
                                     launchUrl(phone);
                                   },
                                 ),
@@ -122,11 +172,19 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               Gap(30),
               Text("bio".tr(), style: TextStyles.semiBoldStyle),
               Gap(20),
-              Text(context.locale.languageCode == "ar" ? widget.doctorModel.specialization ?? '' : translatedSpecialization, style: TextStyles.regularStyle.copyWith(fontSize: 16)),
+              Text(
+                context.locale.languageCode == "ar"
+                    ? widget.doctorModel.specialization ?? ''
+                    : translatedSpecialization,
+                style: TextStyles.regularStyle.copyWith(fontSize: 16),
+              ),
               Gap(20),
               Container(
                 width: double.infinity,
-                decoration: BoxDecoration(color: AppColors.inputColor, borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(
+                  color: AppColors.inputColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -137,12 +195,23 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColors.primaryColor,
-                              border: Border.all(width: 4, color: AppColors.primaryColor),
+                              border: Border.all(
+                                width: 4,
+                                color: AppColors.primaryColor,
+                              ),
                             ),
-                            child: Icon(Icons.access_time, color: AppColors.wightColor),
+                            child: Icon(
+                              Icons.access_time,
+                              color: AppColors.wightColor,
+                            ),
                           ),
                           Gap(10),
-                          Text("${widget.doctorModel.openHour ?? ''} - ${widget.doctorModel.closeHour ?? ''} ", style: TextStyles.regularStyle.copyWith(fontSize: 18)),
+                          Text(
+                            "${widget.doctorModel.openHour ?? ''} - ${widget.doctorModel.closeHour ?? ''} ",
+                            style: TextStyles.regularStyle.copyWith(
+                              fontSize: 18,
+                            ),
+                          ),
                         ],
                       ),
                       Gap(30),
@@ -152,12 +221,25 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColors.primaryColor,
-                              border: Border.all(width: 4, color: AppColors.primaryColor),
+                              border: Border.all(
+                                width: 4,
+                                color: AppColors.primaryColor,
+                              ),
                             ),
-                            child: Icon(Icons.location_on, color: AppColors.wightColor),
+                            child: Icon(
+                              Icons.location_on,
+                              color: AppColors.wightColor,
+                            ),
                           ),
                           Gap(10),
-                          Text(context.locale.languageCode == "ar" ? widget.doctorModel.address ?? '' : translatedAddress, style: TextStyles.regularStyle.copyWith(fontSize: 18)),
+                          Text(
+                            context.locale.languageCode == "ar"
+                                ? widget.doctorModel.address ?? ''
+                                : translatedAddress,
+                            style: TextStyles.regularStyle.copyWith(
+                              fontSize: 18,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -170,7 +252,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               Gap(20),
               Container(
                 width: double.infinity,
-                decoration: BoxDecoration(color: AppColors.inputColor, borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(
+                  color: AppColors.inputColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -181,12 +266,23 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColors.primaryColor,
-                              border: Border.all(width: 4, color: AppColors.primaryColor),
+                              border: Border.all(
+                                width: 4,
+                                color: AppColors.primaryColor,
+                              ),
                             ),
-                            child: Icon(Icons.mail, color: AppColors.wightColor),
+                            child: Icon(
+                              Icons.mail,
+                              color: AppColors.wightColor,
+                            ),
                           ),
                           Gap(10),
-                          Text(widget.doctorModel.email ?? '', style: TextStyles.regularStyle.copyWith(fontSize: 18)),
+                          Text(
+                            widget.doctorModel.email ?? '',
+                            style: TextStyles.regularStyle.copyWith(
+                              fontSize: 18,
+                            ),
+                          ),
                         ],
                       ),
                       Gap(30),
@@ -196,25 +292,41 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColors.primaryColor,
-                              border: Border.all(width: 4, color: AppColors.primaryColor),
+                              border: Border.all(
+                                width: 4,
+                                color: AppColors.primaryColor,
+                              ),
                             ),
-                            child: Icon(Icons.phone, color: AppColors.wightColor),
+                            child: Icon(
+                              Icons.phone,
+                              color: AppColors.wightColor,
+                            ),
                           ),
                           Gap(10),
-                          Text(widget.doctorModel.phone1 ?? '', style: TextStyles.regularStyle.copyWith(fontSize: 18)),
+                          Text(
+                            widget.doctorModel.phone1 ?? '',
+                            style: TextStyles.regularStyle.copyWith(
+                              fontSize: 18,
+                            ),
+                          ),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
+              Gap(30),
+              MainButtonCustom(
+                backgroundColor: AppColors.primaryColor,
+                width: double.infinity,
+                title: "احجز موعد الان",
+                onPressed: () {
+                  context.push(Routes.booking, extra: widget.doctorModel.name);
+                },
+              ),
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(20),
-        child: MainButtonCustom(title: "book_now".tr(), onPressed: () {}, backgroundColor: AppColors.primaryColor, textColor: AppColors.wightColor),
       ),
     );
   }
